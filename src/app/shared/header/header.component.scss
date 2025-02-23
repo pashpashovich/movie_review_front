@@ -1,0 +1,19 @@
+.navbar {
+    padding: 10px;
+    background-color: #343a40;
+  
+    .navbar-brand {
+      font-size: 1.5rem;
+    }
+  
+    .d-flex a {
+      font-size: 1rem;
+      color: #fff;
+      text-decoration: none;
+      margin-left: 10px;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
