@@ -1,0 +1,75 @@
+<div class="container my-5">
+  <h1 class="text-center">Управление жанрами</h1>
+
+  <form [formGroup]="searchForm" class="d-flex mb-3" (ngSubmit)="searchGenres()">
+    <input type="text" formControlName="search" placeholder="Поиск жанров..." class="form-control me-2">
+    <button type="submit" class="btn btn-primary">Поиск</button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="resetSearch()">Сбросить</button>
+  </form>
+
+  <div class="mb-3">
+    <label for="sort" class="form-label">Сортировать по</label>
+    <select id="sort" class="form-select" (change)="changeSort($event)">
+      <option value="id" [selected]="sortField === 'id'">ID</option>
+      <option value="name" [selected]="sortField === 'name'">Название</option>
+    </select>
+  </div>
+
+  <div class="table-responsive my-4">
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Название</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="genres.length === 0">
+          <td colspan="3" class="text-center text-muted">Нет данных</td>
+        </tr>
+        <tr *ngFor="let genre of genres">
+          <td>{{ genre.id }}</td>
+          <td>{{ genre.name }}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" (click)="editGenre(genre)">Редактировать</button>
+            <button class="btn btn-sm btn-danger ms-2" (click)="deleteGenre(genre.id)">Удалить</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <nav *ngIf="totalPages > 1">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="goToPage(currentPage - 1)">Предыдущая</button>
+      </li>
+      <li *ngFor="let i of [].constructor(totalPages); let index = index" class="page-item"
+          [class.active]="index + 1 === currentPage">
+        <button class="page-link" (click)="goToPage(index + 1)">{{ index + 1 }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="goToPage(currentPage + 1)">Следующая</button>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="card mt-4">
+    <div class="card-header bg-dark text-white">
+      <h2 class="mb-0">{{ isEditing ? 'Редактировать жанр' : 'Добавить жанр' }}</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="genreForm" (ngSubmit)="submitForm()">
+        <div class="mb-3">
+          <label for="name" class="form-label">Название</label>
+          <input type="text" id="name" formControlName="name" class="form-control" required>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-success">{{ isEditing ? 'Сохранить' : 'Добавить' }}</button>
+          <button type="button" class="btn btn-secondary ms-2" (click)="resetForm()">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
