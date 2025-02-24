@@ -1,0 +1,42 @@
+<div class="container my-5">
+    <div class="card shadow-sm p-4">
+      <h1 class="text-center mb-4">Личный кабинет</h1>
+      <div class="row">
+        <div class="col-md-4 text-center">
+          <i class="bi bi-person-circle" style="font-size: 6rem;"></i>
+        </div>
+        <div class="col-md-8">
+          <h2>Добро пожаловать, {{ user.username }}!</h2>
+          <p><strong>Email:</strong> {{ user.email }}</p>
+          <p><strong>ID:</strong> {{ user.id }}</p>
+        </div>
+      </div>
+    </div>
+  
+    <div class="card shadow-sm p-4 mt-4">
+      <h2 class="text-center mb-4">Последние отзывы</h2>
+      <div *ngIf="recentReviews.length > 0; else noReviews">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let review of recentReviews">
+            <div class="d-flex justify-content-between">
+              <span><strong>Фильм:</strong> {{ review.movie?.title }}</span>
+              <span [ngClass]="{
+                'bg-success': review.status === 'APPROVED',
+                'bg-danger': review.status === 'REJECTED',
+                'bg-warning': review.status === 'PENDING',
+                'bg-secondary': review.status !== 'APPROVED' && review.status !== 'REJECTED' && review.status !== 'PENDING'
+              }" class="badge">
+                {{ review.status === 'APPROVED' ? 'Одобрен' : review.status === 'REJECTED' ? 'Отклонен' : 'В ожидании' }}
+              </span>
+            </div>
+            <p><strong>Отзыв:</strong> {{ review.content }}</p>
+            <p><strong>Оценка:</strong> {{ review.rating }} из 5</p>
+            <p class="text-muted"><strong>Дата:</strong> {{ formatDateTime(review.createdAt) }}</p>
+          </li>
+        </ul>
+      </div>
+      <ng-template #noReviews>
+        <p class="text-center">Нет отзывов</p>
+      </ng-template>
+    </div>
+  </div>  

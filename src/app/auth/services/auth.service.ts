@@ -8,6 +8,7 @@ export class AuthService {
   private platformId = inject(PLATFORM_ID);
   private tokenKey = 'auth_token';
   private roleKey = 'user_role';
+  private userIdKey = 'user_id';  
 
   setToken(token: string) {
     if (isPlatformBrowser(this.platformId)) {
@@ -41,14 +42,29 @@ export class AuthService {
     return null;
   }
 
-  isAuthenticated(): boolean {
-    return !!this.getToken();
+  setUserId(userId: number) { 
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(this.userIdKey, userId.toString());
+    }
+  }
+
+  getUserId(): number | null {  
+    if (isPlatformBrowser(this.platformId)) {
+      const id = localStorage.getItem(this.userIdKey);
+      return id ? Number(id) : null;
+    }
+    return null;
   }
 
   logout() {
     this.clearToken();
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem(this.roleKey);
+      localStorage.removeItem(this.userIdKey);
     }
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken();
   }
 }

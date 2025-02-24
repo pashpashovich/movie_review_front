@@ -37,15 +37,17 @@ export class LoginComponent {
       return;
     }
 
-    this.http.post<{ token: string, role: string }>('http://localhost:8080/api/auth/authenticate', this.loginForm.value)
+    this.http.post<{ token: string, role: string, id: number }>('http://localhost:8080/api/auth/authenticate', this.loginForm.value)
       .subscribe({
         next: (response) => {
           this.authService.setToken(response.token);
           this.authService.setRole(response.role);
+          this.authService.setUserId(response.id);  
+          
           if (response.role === 'ADMIN') {
             this.router.navigate(['/admin/movies']);
           } else {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/user/profile']);  
           }
         },
         error: err => {
@@ -54,4 +56,3 @@ export class LoginComponent {
       });
   }
 }
-

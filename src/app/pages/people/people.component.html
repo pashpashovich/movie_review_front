@@ -1,0 +1,85 @@
+<div class="container my-5">
+    <h1 class="text-center">Управление персонами</h1>
+  
+    <form class="d-flex mb-3" (ngSubmit)="searchPeople()">
+      <input type="text" [(ngModel)]="searchQuery" name="search" class="form-control me-2"
+             placeholder="Поиск по имени">
+      <select [(ngModel)]="roleFilter" name="role" class="form-select me-2">
+        <option value="">Все роли</option>
+        <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+      </select>
+      <button type="submit" class="btn btn-primary">Поиск</button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="resetForm()">Сброс</button>
+    </form>
+  
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Роль</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let person of people">
+            <td>{{ person.id }}</td>
+            <td>{{ person.fullName }}</td>
+            <td>{{ person.role }}</td>
+            <td>
+              <button class="btn btn-sm btn-primary" (click)="editPerson(person)">Редактировать</button>
+              <button class="btn btn-sm btn-danger" (click)="deletePerson(person.id)">Удалить</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <nav>
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="goToPage(currentPage - 1)">Предыдущая</button>
+        </li>
+        <li *ngFor="let i of [].constructor(totalPages); let index = index"
+            class="page-item" [class.active]="index + 1 === currentPage">
+          <button class="page-link" (click)="goToPage(index + 1)">{{ index + 1 }}</button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="goToPage(currentPage + 1)">Следующая</button>
+        </li>
+      </ul>
+    </nav>
+  
+    <div *ngIf="errorMessage" class="alert alert-danger text-center">
+        {{ errorMessage }}
+      </div>
+      
+    <div class="card">
+      <div class="card-header bg-dark text-white">
+        <h2 class="text-center">{{ isEditing ? 'Редактировать' : 'Добавить' }} персону</h2>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="personForm" (ngSubmit)="submitForm()">
+          <input type="hidden" formControlName="id">
+  
+          <div class="mb-3">
+            <label for="fullName" class="form-label">Имя</label>
+            <input type="text" formControlName="fullName" class="form-control">
+          </div>
+  
+          <div class="mb-3">
+            <label for="role" class="form-label">Роль</label>
+            <select formControlName="role" class="form-select">
+              <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+            </select>
+          </div>
+  
+          <div class="text-center">
+            <button type="submit" class="btn btn-success">{{ isEditing ? 'Обновить' : 'Добавить' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
