@@ -1,0 +1,189 @@
+<div class="container my-5">
+  <h1 class="text-center mb-4">Управление фильмами</h1>
+
+  <form [formGroup]="movieForm" (ngSubmit)="submitForm()">
+    <input type="hidden" formControlName="id" />
+
+    <div class="mb-3">
+      <label for="title" class="form-label">Название</label>
+      <input
+        type="text"
+        id="title"
+        formControlName="title"
+        class="form-control"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Описание</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="form-control"
+      ></textarea>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="releaseYear" class="form-label">Год выпуска</label>
+        <input
+          type="number"
+          id="releaseYear"
+          formControlName="releaseYear"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="duration" class="form-label">Длительность (мин)</label>
+        <input
+          type="number"
+          id="duration"
+          formControlName="duration"
+          class="form-control"
+          required
+        />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="language" class="form-label">Язык</label>
+        <select
+          id="language"
+          formControlName="language"
+          class="form-select"
+          required
+        >
+          <option value="Русский">Русский</option>
+          <option value="Английский">Английский</option>
+          <option value="Французский">Французский</option>
+          <option value="Испанский">Испанский</option>
+          <option value="Белорусский">Белорусский</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="posterFile" class="form-label">Постер</label>
+      <input
+        type="file"
+        id="posterFile"
+        (change)="onFileSelected($event)"
+        class="form-control"
+        accept="image/*"
+      />
+    </div>
+
+    <label for="genres" class="form-label">Жанры</label>
+    <select
+      name="genres"
+      id="genres"
+      class="form-select"
+      multiple
+      formControlName="genres"
+    >
+      <option *ngFor="let genre of genresList" [value]="genre">
+        {{ genre }}
+      </option>
+    </select>
+
+    <label for="actors" class="form-label">Актёры</label>
+    <select
+      name="actors"
+      id="actors"
+      class="form-select"
+      multiple
+      formControlName="actors"
+    >
+      <option *ngFor="let actor of actorsList" [value]="actor">
+        {{ actor }}
+      </option>
+    </select>
+
+    <label for="directors" class="form-label">Режиссёры</label>
+    <select
+      name="directors"
+      id="directors"
+      class="form-select"
+      multiple
+      formControlName="directors"
+    >
+      <option *ngFor="let director of directorsList" [value]="director">
+        {{ director }}
+      </option>
+    </select>
+
+    <label for="producers" class="form-label">Продюсеры</label>
+    <select
+      name="producers"
+      id="producers"
+      class="form-select"
+      multiple
+      formControlName="producers"
+    >
+      <option *ngFor="let producer of producersList" [value]="producer">
+        {{ producer }}
+      </option>
+    </select>
+
+    <div class="text-center">
+      <button
+        type="submit"
+        class="btn btn-success"
+        [disabled]="movieForm.invalid"
+      >
+        Сохранить
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="resetForm()">
+        Сбросить
+      </button>
+    </div>
+  </form>
+
+  <table class="table table-bordered table-striped mt-4">
+    <thead class="table-dark">
+      <tr>
+        <th>Постер</th>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Жанры</th>
+        <th>Актёры</th>
+        <th>Режиссёры</th>
+        <th>Продюсеры</th>
+        <th>Год</th>
+        <th>Длительность</th>
+        <th>Язык</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let movie of movies">
+        <td>
+          <img
+            *ngIf="movie.posterUrl"
+            [src]="movie.posterUrl"
+            alt="Постер"
+            class="img-thumbnail"
+            style="max-width: 100px"
+          />
+        </td>
+        <td>{{ movie.id }}</td>
+        <td>{{ movie.title }}</td>
+        <td>{{ movie.genres.join(", ") }}</td>
+        <td>{{ movie.actors.join(", ") }}</td>
+        <td>{{ movie.directors.join(", ") }}</td>
+        <td>{{ movie.producers.join(", ") }}</td>
+        <td>{{ movie.releaseYear }}</td>
+        <td>{{ movie.duration }} мин</td>
+        <td>{{ movie.language }}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" (click)="editMovie(movie)">
+            Редактировать
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="deleteMovie(movie.id)">
+            Удалить
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

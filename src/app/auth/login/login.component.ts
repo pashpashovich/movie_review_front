@@ -4,6 +4,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -35,10 +37,16 @@ export class LoginComponent {
       return;
     }
 
-    this.http.post('http://localhost:8080/api/auth/authenticate', this.loginForm.value)
+    this.http.post<{ token: string, role: string }>('http://localhost:8080/api/auth/authenticate', this.loginForm.value)
       .subscribe({
-        next: () => {
-          this.router.navigate(['/dashboard']);
+        next: (response) => {
+          this.authService.setToken(response.token);
+          this.authService.setRole(response.role);
+          if (response.role === 'ADMIN') {
+            this.router.navigate(['/admin/movies']);
+          } else {
+            this.router.navigate(['/dashboard']);
+          }
         },
         error: err => {
           this.errorMessage = err.error.message || 'Ошибка входа. Попробуйте снова.';
@@ -46,3 +54,4 @@ export class LoginComponent {
       });
   }
 }
+
