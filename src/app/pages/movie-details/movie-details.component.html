@@ -1,0 +1,194 @@
+<div class="container my-5" *ngIf="movie as m">
+  <h1 class="text-center mb-4">{{ m.title }}</h1>
+  <div class="row">
+    <div class="col-md-4">
+      <img
+        *ngIf="m.poster; else defaultPoster"
+        [src]="m.poster"
+        class="img-fluid rounded shadow"
+        alt="{{ m.title }}"
+      />
+      <ng-template #defaultPoster>
+        <img
+          [src]="defaultPoster"
+          class="img-fluid rounded shadow"
+          alt="{{ m.title }}"
+        />
+      </ng-template>
+    </div>
+    <div class="col-md-8">
+      <ul class="list-group mb-4">
+        <li class="list-group-item">
+          <strong>Средний рейтинг:</strong>
+          <span class="text-warning rating">
+            <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+              <i
+                class="bi"
+                [ngClass]="{
+                  'bi-star-fill':  star <= (averageRating ?? 0),
+                  'bi-star': star > (averageRating ?? 0)
+                }"
+                style="color: gold"
+              ></i>
+            </ng-container>
+            ({{ averageRating !== null ? averageRating.toFixed(1) : "Нет рейтинга" }})
+          </span>
+        </li>
+        <li class="list-group-item">
+          <strong>Описание:</strong> {{ m.description }}
+        </li>
+        <li class="list-group-item">
+          <strong>Жанры:</strong>
+          <span class="badge bg-primary me-1" *ngFor="let g of m.genres">
+            {{ g }}
+          </span>
+        </li>
+        <li class="list-group-item">
+          <strong>Режиссёры:</strong>
+          <span
+            class="badge bg-warning text-dark me-1"
+            *ngFor="let d of m.directors"
+          >
+            {{ d }}
+          </span>
+        </li>
+        <li class="list-group-item">
+          <strong>Актёры:</strong>
+          <span
+            class="badge bg-warning text-dark me-1"
+            *ngFor="let k of m.actors"
+          >
+            {{ k }}
+          </span>
+        </li>
+        <li class="list-group-item">
+          <strong>Продюсеры:</strong>
+          <span
+            class="badge bg-warning text-dark me-1"
+            *ngFor="let k of m.producers"
+          >
+            {{ k }}
+          </span>
+        </li>
+      </ul>
+
+      <form (submit)="submitRating(); $event.preventDefault()">
+        <input type="hidden" [value]="m.id" />
+        <div class="rating">
+          <strong>Ваша оценка:</strong>
+          <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+            <input
+              type="radio"
+              [id]="'star-' + star + '-' + m.id"
+              name="userRating"
+              [value]="star"
+              (change)="selectRating(star)"
+              [checked]="star === selectedRating"
+              style="display: none"
+            />
+            <label
+              [for]="'star-' + star + '-' + m.id"
+              class="star-label"
+              style="cursor: pointer"
+            >
+              <i
+                class="bi"
+                [ngClass]="{
+                  'bi-star-fill': star <= selectedRating,
+                  'bi-star': star > selectedRating
+                }"
+                style="font-size: 1.8rem; cursor: pointer; color: gold"
+              ></i>
+            </label>
+          </ng-container>
+        </div>
+        <button type="submit" class="btn btn-success mt-3">
+          {{ ratingId ? "Обновить рейтинг" : "Отправить рейтинг" }}
+        </button>
+      </form>
+
+      <button
+        class="btn btn-outline-success mt-3"
+        [disabled]="inList"
+        (click)="addToWatchlist()"
+      >
+        <i class="bi bi-plus-circle"></i>
+        Добавить в watchlist
+      </button>
+      <span
+        *ngIf="inList"
+        class="text-muted ms-2"
+        style="vertical-align: middle"
+      >
+        Уже в списке
+      </span>
+    </div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h3>Отзывы</h3>
+      <ng-container *ngIf="reviews.length > 0; else noReviews">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let r of reviews">
+            <strong>{{ r.username }}</strong> ({{ r.rating }}★)
+            <small class="text-muted ms-2">{{ r.createdAt }}</small>
+            <p class="mb-0">{{ r.content }}</p>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #noReviews>
+        <p>Пока нет отзывов</p>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h3>Добавить отзыв</h3>
+      <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+        <input type="hidden" [value]="m.id" />
+        <div class="mb-3">
+          <label for="reviewContent" class="form-label">Текст отзыва</label>
+          <textarea
+            id="reviewContent"
+            rows="5"
+            class="form-control"
+            formControlName="content"
+            required
+          ></textarea>
+          <div
+            *ngIf="
+              reviewForm.get('content')?.invalid &&
+              (reviewForm.get('content')?.dirty ||
+                reviewForm.get('content')?.touched)
+            "
+            class="text-danger"
+          >
+            Минимум 10 символов
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="reviewRating" class="form-label">Оценка</label>
+          <select
+            id="reviewRating"
+            class="form-select"
+            formControlName="rating"
+            required
+          >
+            <option *ngFor="let star of [1, 2, 3, 4, 5]" [value]="star">
+              {{ star }}
+            </option>
+          </select>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="reviewForm.invalid"
+        >
+          Отправить
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

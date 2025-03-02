@@ -1,0 +1,33 @@
+<div class="container my-5">
+  <h1 class="text-center mb-4">Список избранного</h1>
+
+  <div *ngIf="watchlist.length > 0; else emptyWatchlist">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div class="col" *ngFor="let item of watchlist">
+        <div class="card h-100">
+          <img
+            [src]="item.posterUrl"
+            class="card-img-top"
+            alt="{{ item.movieTitle }}"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{ item.movieTitle }}</h5>
+            <p class="card-text">
+              <strong>Добавлено:</strong>
+              <span class="addedAt">{{ formatDateTime(item.addedAt) }}</span>
+            </p>
+            <button class="btn btn-danger" (click)="removeFromWatchlist(item.movieId)">
+              Удалить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyWatchlist>
+    <div class="alert alert-info text-center" role="alert">
+      Ваш список избранного пуст
+    </div>
+  </ng-template>
+</div>

@@ -2,6 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../auth/services/auth.service';
+import localeRu from '@angular/common/locales/ru'; 
+import { registerLocaleData } from '@angular/common'; 
+
+registerLocaleData(localeRu, 'ru-RU');
 
 @Component({
   selector: 'app-profile',
@@ -53,7 +57,7 @@ export class ProfileComponent implements OnInit {
     }
 
     this.http
-      .get<any[]>(`http://localhost:8080/api/user/${userId}/reviews`, { headers: this.getAuthHeaders() })
+      .get<any[]>(`http://localhost:8080/api/user/profile/${userId}/reviews`, { headers: this.getAuthHeaders() })
       .subscribe({
         next: (data) => (this.recentReviews = data),
         error: (err) => console.error('Ошибка загрузки отзывов:', err),

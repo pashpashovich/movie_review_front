@@ -19,7 +19,7 @@
         <ul class="list-group">
           <li class="list-group-item" *ngFor="let review of recentReviews">
             <div class="d-flex justify-content-between">
-              <span><strong>Фильм:</strong> {{ review.movie?.title }}</span>
+              <span><strong>Фильм:</strong> {{ review.movieName }}</span>
               <span [ngClass]="{
                 'bg-success': review.status === 'APPROVED',
                 'bg-danger': review.status === 'REJECTED',

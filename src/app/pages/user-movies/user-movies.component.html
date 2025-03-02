@@ -1,0 +1,166 @@
+<div class="container my-5">
+  <h1 class="text-center mb-4">Поиск фильмов</h1>
+
+  <div class="card p-4 shadow-sm mb-4">
+    <form [formGroup]="filterForm">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Название</label>
+          <input
+            type="text"
+            formControlName="searchQuery"
+            class="form-control"
+            placeholder="Введите название"
+          />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Жанр</label>
+          <select formControlName="genre" class="form-select">
+            <option value="">Все жанры</option>
+            <option *ngFor="let g of genres" [value]="g.id">
+              {{ g.name }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Язык</label>
+          <select formControlName="language" class="form-select">
+            <option value="">Выберите язык</option>
+            <option value="Русский">Русский</option>
+            <option value="Английский">Английский</option>
+            <option value="Французский">Французский</option>
+            <option value="Испанский">Испанский</option>
+            <option value="Белорусский">Белорусский</option>
+          </select>
+        </div>
+      </div>
+      <div class="row g-3 mt-3">
+        <div class="col-md-3">
+          <label class="form-label">Год</label>
+          <input
+            type="number"
+            formControlName="year"
+            class="form-control"
+            placeholder="2023"
+          />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Длительность (мин)</label>
+          <input
+            type="number"
+            formControlName="duration"
+            class="form-control"
+            placeholder="минуты"
+          />
+        </div>
+        <div class="col-md-3 align-self-end">
+          <button
+            type="button"
+            class="btn btn-primary w-100"
+            (click)="applyFilters()"
+          >
+            Применить
+          </button>
+        </div>
+        <div class="col-md-3 align-self-end">
+          <button
+            type="button"
+            class="btn btn-secondary w-100"
+            (click)="resetFilters()"
+          >
+            Сбросить
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h3>Рекомендации</h3>
+      <div
+        *ngIf="recommendations.length === 0"
+        class="alert alert-info text-center"
+      >
+        Нет рекомендаций
+      </div>
+      <div
+        *ngIf="recommendations.length > 0"
+        class="row row-cols-1 row-cols-md-3 g-4"
+      >
+        <div *ngFor="let rec of recommendations" class="col">
+          <div class="card h-100">
+            <img
+              [src]="rec.posterUrl"
+              class="card-img-top"
+              alt="{{ rec.title }}"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ rec.title }}</h5>
+              <a
+                [routerLink]="['/user/movies', rec.id]"
+                class="btn btn-outline-primary"
+                >Подробнее</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Фильмы</h3>
+      <div *ngIf="movies.length === 0" class="alert alert-warning text-center">
+        <strong>Нет доступных фильмов</strong>
+      </div>
+      <div *ngIf="movies.length > 0" class="row row-cols-1 row-cols-md-3 g-4">
+        <div *ngFor="let movie of movies" class="col">
+          <div class="card h-100">
+            <img
+              [src]="movie.posterUrl"
+              class="card-img-top"
+              alt="{{ movie.title }}"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ movie.title }}</h5>
+              <p class="card-text">
+                <strong>Жанры:</strong> {{ movie.genres }}
+              </p>
+              <p class="card-text">
+                <strong>Язык:</strong> {{ movie.language }}
+              </p>
+              <p class="card-text">
+                <strong>Год:</strong> {{ movie.releaseYear }}
+              </p>
+              <p class="card-text">
+                <strong>Длительность:</strong> {{ movie.duration }} мин
+              </p>
+              <a
+                [routerLink]="['/user/movies', movie.id]"
+                class="btn btn-primary"
+              >
+                Подробнее
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav *ngIf="totalPages > 1" aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+          <li
+            *ngFor="let i of [].constructor(totalPages); let index = index"
+            class="page-item"
+            [class.active]="index + 1 === currentPage"
+          >
+            <a class="page-link" (click)="goToPage(index + 1)">{{
+              index + 1
+            }}</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

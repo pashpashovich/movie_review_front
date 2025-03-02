@@ -1,0 +1,37 @@
+<div class="container my-5">
+  <h1 class="text-center mb-4">Управление отзывами</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Автор</th>
+        <th>Фильм</th>
+        <th>Отзыв</th>
+        <th>Статус</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="reviews.length === 0">
+        <td colspan="5" class="text-center text-muted">Нет данных</td>
+      </tr>
+      <tr *ngFor="let review of reviews">
+        <td>{{ review.username }}</td> 
+        <td>{{ review.movieName }}</td> 
+        <td>{{ review.content }}</td>
+        <td>
+          <select class="form-select" [(ngModel)]="review.status">
+            <option *ngFor="let option of statusOptions" [value]="option.value">
+              {{ option.label }}
+            </option>
+          </select>
+        </td>
+        <td>
+          <button class="btn btn-primary mt-2" (click)="updateReviewStatus(review.id, review.status)">
+            Обновить
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

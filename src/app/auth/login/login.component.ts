@@ -41,7 +41,7 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           this.authService.setToken(response.token);
-          this.authService.setRole(response.role);
+          this.authService.setRole(response.role as 'USER' | 'ADMIN');
           this.authService.setUserId(response.id);  
           
           if (response.role === 'ADMIN') {
