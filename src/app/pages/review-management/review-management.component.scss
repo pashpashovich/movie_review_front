@@ -1,0 +1,33 @@
+.container {
+  max-width: 1000px;
+}
+
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+  thead {
+    background-color: #212529;
+    color: white;
+  }
+  tbody {
+    tr {
+      transition: 0.3s;
+      &:hover {
+        background-color: rgba(13, 110, 253, 0.05); // 🔥 Эффект наведения
+      }
+    }
+  }
+}
+
+.badge {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.btn-sm {
+  transition: 0.3s;
+  &:hover {
+    transform: scale(1.05);
+  }
+}

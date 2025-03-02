@@ -1,0 +1,70 @@
+.container {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    color: #343a40;
+    font-weight: bold;
+  }
+  
+  form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  button {
+    margin: 5px;
+  }
+  
+  .table {
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .table thead {
+    background: #343a40;
+    color: white;
+  }
+  
+  .table td img {
+    border-radius: 5px;
+  }
+  
+  .text-center {
+    margin-top: 20px;
+  }
+  
+  .btn {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .btn-success:hover {
+    background-color: #28a745;
+    transform: scale(1.05);
+  }
+  
+  .btn-secondary:hover {
+    background-color: #6c757d;
+    transform: scale(1.05);
+  }
+  
+  .btn-primary:hover {
+    background-color: #007bff;
+    transform: scale(1.05);
+  }
+  
+  .btn-danger:hover {
+    background-color: #dc3545;
+    transform: scale(1.05);
+  }
+  

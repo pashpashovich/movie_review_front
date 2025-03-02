@@ -1,46 +1,56 @@
 <div class="container my-5">
-    <h1 class="text-center mb-4">Список пользователей</h1>
-  
-    <div class="table-responsive">
-      <table class="table table-bordered table-striped">
-        <thead class="table-dark">
-          <tr class="text-center">
-            <th>ID</th>
-            <th>Имя пользователя</th>
-            <th>Email</th>
-            <th>Роль</th>
-            <th>Статус</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of users" class="text-center align-middle">
-            <td>{{ user.id }}</td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.role }}</td>
-            <td>
-              <span [class.text-danger]="user.isBlocked" [class.text-success]="!user.isBlocked">
-                {{ user.isBlocked ? 'Заблокирован' : 'Активен' }}
-              </span>
-            </td>
-            <td>
-              <button class="btn btn-warning btn-sm" (click)="updateUserStatus(user.id, 'block')" [disabled]="user.isBlocked">
-                🚫 Заблокировать
-              </button>
-              <button class="btn btn-success btn-sm" (click)="updateUserStatus(user.id, 'unblock')" [disabled]="!user.isBlocked">
-                ✅ Разблокировать
-              </button>
-              <button class="btn btn-primary btn-sm" (click)="updateUserStatus(user.id, 'promote')">
-                ⬆️ Повысить роль
-              </button>
-              <button class="btn btn-danger btn-sm" (click)="deleteUser(user.id)">
-                ❌ Удалить
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <h1 class="text-center mb-4">👥 Список пользователей</h1>
+
+  <div class="table-responsive shadow rounded">
+    <table class="table table-hover align-middle">
+      <thead class="table-dark text-center">
+        <tr>
+          <th>#</th>
+          <th>👤 Имя пользователя</th>
+          <th>📧 Email</th>
+          <th>🎭 Роль</th>
+          <th>⚡ Статус</th>
+          <th>⚙️ Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="users.length === 0">
+          <td colspan="6" class="text-center text-muted py-4">🕵️‍♂️ Нет пользователей</td>
+        </tr>
+        <tr *ngFor="let user of users" class="text-center">
+          <td class="fw-bold">{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="badge" [class.bg-primary]="user.role === 'USER'"
+                               [class.bg-success]="user.role === 'ADMIN'"
+                               [class.bg-warning]="user.role === 'MODERATOR'">
+              {{ user.role }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [class.bg-danger]="user.isBlocked" [class.bg-success]="!user.isBlocked">
+              {{ user.isBlocked ? '🚫 Заблокирован' : '✅ Активен' }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-warning" (click)="updateUserStatus(user.id, 'block')" 
+                    [disabled]="user.isBlocked">
+              🚫 Заблокировать
+            </button>
+            <button class="btn btn-sm btn-outline-success ms-1" (click)="updateUserStatus(user.id, 'unblock')" 
+                    [disabled]="!user.isBlocked">
+              ✅ Разблокировать
+            </button>
+            <button class="btn btn-sm btn-outline-primary ms-1" (click)="updateUserStatus(user.id, 'promote')">
+              ⬆️ Повысить
+            </button>
+            <button class="btn btn-sm btn-outline-danger ms-1" (click)="deleteUser(user.id)">
+              ❌ Удалить
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  
+</div>

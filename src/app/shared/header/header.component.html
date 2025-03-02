@@ -1,12 +1,12 @@
 <nav *ngIf="!authService.isAuthenticated()" class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" routerLink="/"><strong>Movie Review</strong></a>
+    <a class="navbar-brand" routerLink="/"><strong>MovieReview</strong></a>
   </div>
 </nav>
 
 <nav *ngIf="authService.isAdmin()" class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" routerLink="/admin/movies" routerLinkActive="active"><strong>Admin Panel</strong></a>
+    <a class="navbar-brand" routerLink="/admin/movies" routerLinkActive="active"><strong>AdminPanel</strong></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -24,7 +24,7 @@
 
 <nav *ngIf="authService.isUser()" class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container">
-    <a class="navbar-brand" routerLink="/user/profile" routerLinkActive="active"><strong>КиноПоиск</strong></a>
+    <a class="navbar-brand" routerLink="/user/profile" routerLinkActive="active"><strong>MovieReview</strong></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>

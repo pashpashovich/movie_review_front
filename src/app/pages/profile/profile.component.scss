@@ -1,0 +1,28 @@
+.container {
+  max-width: 800px;
+}
+
+.card {
+  border-radius: 12px;
+  transition: 0.3s;
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.list-group-item {
+  transition: 0.3s ease-in-out;
+  &:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+  }
+}
+
+.badge {
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.text-muted {
+  font-size: 14px;
+}

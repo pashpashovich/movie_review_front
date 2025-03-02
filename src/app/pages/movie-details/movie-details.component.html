@@ -1,81 +1,84 @@
 <div class="container my-5" *ngIf="movie as m">
-  <h1 class="text-center mb-4">{{ m.title }}</h1>
+  <h1 class="text-center mb-4 text-primary fw-bold">🎬 {{ m.title }}</h1>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 text-center">
       <img
         *ngIf="m.poster; else defaultPoster"
         [src]="m.poster"
-        class="img-fluid rounded shadow"
+        class="img-fluid rounded shadow-lg"
         alt="{{ m.title }}"
       />
       <ng-template #defaultPoster>
         <img
           [src]="defaultPoster"
-          class="img-fluid rounded shadow"
+          class="img-fluid rounded shadow-lg"
           alt="{{ m.title }}"
         />
       </ng-template>
     </div>
     <div class="col-md-8">
-      <ul class="list-group mb-4">
+      <ul class="list-group mb-4 shadow-sm rounded">
         <li class="list-group-item">
-          <strong>Средний рейтинг:</strong>
+          <strong>⭐ Средний рейтинг:</strong>
           <span class="text-warning rating">
             <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
               <i
                 class="bi"
                 [ngClass]="{
-                  'bi-star-fill':  star <= (averageRating ?? 0),
+                  'bi-star-fill': star <= (averageRating ?? 0),
                   'bi-star': star > (averageRating ?? 0)
                 }"
                 style="color: gold"
               ></i>
             </ng-container>
-            ({{ averageRating !== null ? averageRating.toFixed(1) : "Нет рейтинга" }})
+            ({{
+              averageRating !== null
+                ? averageRating.toFixed(1)
+                : "Нет рейтинга"
+            }})
           </span>
         </li>
         <li class="list-group-item">
-          <strong>Описание:</strong> {{ m.description }}
+          <strong>📜 Описание:</strong> {{ m.description }}
         </li>
         <li class="list-group-item">
-          <strong>Жанры:</strong>
-          <span class="badge bg-primary me-1" *ngFor="let g of m.genres">
-            {{ g }}
-          </span>
+          <strong>🎭 Жанры:</strong>
+          <span class="badge bg-primary me-1" *ngFor="let g of m.genres">{{
+            g
+          }}</span>
         </li>
         <li class="list-group-item">
-          <strong>Режиссёры:</strong>
+          <strong>🎬 Режиссёры:</strong>
           <span
             class="badge bg-warning text-dark me-1"
             *ngFor="let d of m.directors"
+            >{{ d }}</span
           >
-            {{ d }}
-          </span>
         </li>
         <li class="list-group-item">
-          <strong>Актёры:</strong>
+          <strong>🎭 Актёры:</strong>
           <span
-            class="badge bg-warning text-dark me-1"
+            class="badge bg-info text-dark me-1"
             *ngFor="let k of m.actors"
+            >{{ k }}</span
           >
-            {{ k }}
-          </span>
         </li>
         <li class="list-group-item">
-          <strong>Продюсеры:</strong>
+          <strong>🎬 Продюсеры:</strong>
           <span
-            class="badge bg-warning text-dark me-1"
+            class="badge bg-secondary text-white me-1"
             *ngFor="let k of m.producers"
+            >{{ k }}</span
           >
-            {{ k }}
-          </span>
         </li>
       </ul>
 
-      <form (submit)="submitRating(); $event.preventDefault()">
-        <input type="hidden" [value]="m.id" />
+      <form
+        (submit)="submitRating(); $event.preventDefault()"
+        class="shadow-sm p-3 rounded"
+      >
+        <strong>📢 Ваша оценка:</strong>
         <div class="rating">
-          <strong>Ваша оценка:</strong>
           <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
             <input
               type="radio"
@@ -84,13 +87,9 @@
               [value]="star"
               (change)="selectRating(star)"
               [checked]="star === selectedRating"
-              style="display: none"
+              hidden
             />
-            <label
-              [for]="'star-' + star + '-' + m.id"
-              class="star-label"
-              style="cursor: pointer"
-            >
+            <label [for]="'star-' + star + '-' + m.id" class="star-label">
               <i
                 class="bi"
                 [ngClass]="{
@@ -102,58 +101,50 @@
             </label>
           </ng-container>
         </div>
-        <button type="submit" class="btn btn-success mt-3">
-          {{ ratingId ? "Обновить рейтинг" : "Отправить рейтинг" }}
+        <button type="submit" class="btn btn-success w-100 mt-3">
+          {{ ratingId ? "🔄 Обновить рейтинг" : "✅ Отправить рейтинг" }}
         </button>
       </form>
 
       <button
-        class="btn btn-outline-success mt-3"
+        class="btn btn-outline-success w-100 mt-3"
         [disabled]="inList"
         (click)="addToWatchlist()"
       >
-        <i class="bi bi-plus-circle"></i>
-        Добавить в watchlist
+        <i class="bi bi-plus-circle"></i> Добавить в Watchlist
       </button>
-      <span
-        *ngIf="inList"
-        class="text-muted ms-2"
-        style="vertical-align: middle"
-      >
-        Уже в списке
-      </span>
+      <span *ngIf="inList" class="text-muted ms-2">✅ Уже в списке</span>
     </div>
   </div>
 
-  <div class="card mt-4">
+  <div class="card mt-4 shadow-lg">
     <div class="card-body">
-      <h3>Отзывы</h3>
+      <h3 class="text-center">💬 Отзывы</h3>
       <ng-container *ngIf="reviews.length > 0; else noReviews">
         <ul class="list-group">
           <li class="list-group-item" *ngFor="let r of reviews">
-            <strong>{{ r.username }}</strong> ({{ r.rating }}★)
+            <strong>👤 {{ r.username }}</strong> (⭐ {{ r.rating }}/5)
             <small class="text-muted ms-2">{{ r.createdAt }}</small>
-            <p class="mb-0">{{ r.content }}</p>
+            <p class="mb-0">📝 {{ r.content }}</p>
           </li>
         </ul>
       </ng-container>
       <ng-template #noReviews>
-        <p>Пока нет отзывов</p>
+        <p class="text-center text-muted">🚀 Пока нет отзывов</p>
       </ng-template>
     </div>
   </div>
 
-  <div class="card mt-4">
+  <div class="card mt-4 shadow-lg">
     <div class="card-body">
-      <h3>Добавить отзыв</h3>
+      <h3 class="text-center">✏️ Добавить отзыв</h3>
       <form [formGroup]="reviewForm" (ngSubmit)="submitReview()">
-        <input type="hidden" [value]="m.id" />
         <div class="mb-3">
-          <label for="reviewContent" class="form-label">Текст отзыва</label>
+          <label for="reviewContent" class="form-label">📝 Текст отзыва</label>
           <textarea
             id="reviewContent"
             rows="5"
-            class="form-control"
+            class="form-control shadow-sm"
             formControlName="content"
             required
           ></textarea>
@@ -169,10 +160,10 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="reviewRating" class="form-label">Оценка</label>
+          <label for="reviewRating" class="form-label">⭐ Оценка</label>
           <select
             id="reviewRating"
-            class="form-select"
+            class="form-select shadow-sm"
             formControlName="rating"
             required
           >
@@ -183,10 +174,10 @@
         </div>
         <button
           type="submit"
-          class="btn btn-success"
+          class="btn btn-success w-100"
           [disabled]="reviewForm.invalid"
         >
-          Отправить
+          🚀 Отправить
         </button>
       </form>
     </div>

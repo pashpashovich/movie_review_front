@@ -186,4 +186,23 @@
       </tr>
     </tbody>
   </table>
+  <nav *ngIf="totalPages > 1" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="goToPage(currentPage - 1)">«</button>
+      </li>
+
+      <li
+        *ngFor="let page of pagesArray"
+        class="page-item"
+        [class.active]="page === currentPage"
+      >
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="goToPage(currentPage + 1)">»</button>
+      </li>
+    </ul>
+  </nav>
 </div>

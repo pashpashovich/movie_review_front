@@ -42,6 +42,13 @@ interface MovieDetailsDto {
   ratingId?: number;
 }
 
+interface RatingDto {
+  id: number;
+  userId: number;
+  movieId: number;
+  rating: number;
+}
+
 @Component({
   selector: 'app-movie-details',
   standalone: true,
@@ -74,7 +81,7 @@ export class MovieDetailsComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (!id) {
-      console.error('Не передан ID фильма');
+      console.error('❌ Ошибка: Не передан ID фильма');
       return;
     }
     this.loadMovie(id);
@@ -83,7 +90,7 @@ export class MovieDetailsComponent implements OnInit {
   loadMovie(movieId: number) {
     const userId = this.authService.getUserId();
     if (!userId) {
-      console.warn('Пользователь не авторизован, загрузка фильма прервана');
+      console.warn('⚠️ Пользователь не авторизован, загрузка фильма прервана');
       return;
     }
     this.http
@@ -93,20 +100,17 @@ export class MovieDetailsComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.movie = data.movie;
-
-          if (this.movie.poster) {
-            this.movie.poster = `http://localhost:8081/api/images/${this.movie.poster}`;
-          } else {
-            this.movie.poster = this.defaultPoster;
-          }
+          this.movie.poster = this.movie.poster
+            ? `http://localhost:8081/api/images/${this.movie.poster}`
+            : this.defaultPoster;
 
           this.selectedRating = data.userRating || 0;
           this.reviews = data.reviews || [];
           this.inList = data.inList;
-          this.ratingId = data.ratingId || 0;
-          this.averageRating = data.averageRating; 
-                },
-        error: (err) => console.error('Ошибка загрузки фильма:', err),
+          this.ratingId = data.ratingId || null;
+          this.averageRating = data.averageRating;
+        },
+        error: (err) => console.error('❌ Ошибка загрузки фильма:', err),
       });
   }
 
@@ -116,26 +120,53 @@ export class MovieDetailsComponent implements OnInit {
 
   submitRating() {
     if (!this.movie) return;
-    const url = this.ratingId
-      ? `http://localhost:8080/api/user/movies/rate/${this.ratingId}`
-      : `http://localhost:8080/api/user/movies/rate`;
 
-    this.http[this.ratingId != 0 ? 'patch' : 'post'](url, {
+    const userId = this.authService.getUserId();
+    if (!userId) {
+      console.error('❌ Ошибка: ID пользователя не найден.');
+      return;
+    }
+
+    const rateDto = {
+      userId: userId,
+      movieId: this.movie.id,
       rating: this.selectedRating,
-    }).subscribe({
-      next: () => {
-        console.log('Рейтинг успешно отправлен');
-        this.loadMovie(this.movie!.id);
-      },
-      error: (err) => console.error('Ошибка при отправке рейтинга:', err),
-    });
+    };
+
+    if (this.ratingId && this.ratingId !== 0) {
+      this.http
+        .patch<RatingDto>(
+          `http://localhost:8080/api/user/movies/rate/${this.ratingId}`,
+          { rating: this.selectedRating }
+        )
+        .subscribe({
+          next: (response) => {
+            console.log('✅ Рейтинг успешно обновлен:', response);
+            this.loadMovie(this.movie!.id);
+          },
+          error: (err) =>
+            console.error('❌ Ошибка при обновлении рейтинга:', err),
+        });
+    } else {
+      this.http
+        .post<RatingDto>(`http://localhost:8080/api/user/movies/rate`, rateDto)
+        .subscribe({
+          next: (response) => {
+            console.log('✅ Рейтинг успешно отправлен:', response);
+            this.ratingId = response.id ?? null;
+            this.loadMovie(this.movie!.id);
+          },
+          error: (err) =>
+            console.error('❌ Ошибка при отправке рейтинга:', err),
+        });
+    }
   }
 
   addToWatchlist() {
     if (!this.movie) return;
     const userId = this.authService.getUserId();
     if (!userId) {
-      console.error('Ошибка: пользователь не авторизован или нет userId');
+      console.error('❌ Ошибка: пользователь не авторизован или нет userId');
       return;
     }
 
@@ -147,17 +178,18 @@ export class MovieDetailsComponent implements OnInit {
       )
       .subscribe({
         next: (msg: string) => {
-          console.log('Ответ сервера:', msg);
+          console.log('✅ Фильм добавлен в watchlist:', msg);
           this.inList = true;
         },
-        error: (err) => console.error('Ошибка:', err),
+        error: (err) =>
+          console.error('❌ Ошибка при добавлении в watchlist:', err),
       });
   }
 
   submitReview() {
     const userId = this.authService.getUserId();
     if (!userId) {
-      console.warn('Пользователь не авторизован, загрузка фильма прервана');
+      console.warn('⚠️ Пользователь не авторизован, загрузка фильма прервана');
       return;
     }
     if (!this.movie || this.reviewForm.invalid) return;
@@ -172,10 +204,11 @@ export class MovieDetailsComponent implements OnInit {
       })
       .subscribe({
         next: () => {
+          console.log('✅ Отзыв успешно отправлен');
           this.reviewForm.reset({ content: '', rating: 1 });
           this.loadMovie(this.movie!.id);
         },
-        error: (err) => console.error('Ошибка при добавлении отзыва:', err),
+        error: (err) => console.error('❌ Ошибка при добавлении отзыва:', err),
       });
   }
 }

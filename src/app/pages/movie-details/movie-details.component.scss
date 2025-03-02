@@ -1,0 +1,36 @@
+.container {
+  max-width: 1000px;
+}
+
+.card {
+  border-radius: 12px;
+  transition: 0.3s;
+  &:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.badge {
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 1.8rem;
+    transition: 0.2s;
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+}
+
+Ф .btn {
+  transition: 0.3s ease;
+  &:hover {
+    transform: scale(1.05);
+  }
+}

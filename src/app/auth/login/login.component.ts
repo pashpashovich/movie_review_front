@@ -9,13 +9,14 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, RouterModule], 
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
+  passwordVisible: boolean = false; 
 
   constructor(
     private fb: FormBuilder,
@@ -25,34 +26,45 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
-  get username() { return this.loginForm.get('username'); }
-  get password() { return this.loginForm.get('password'); }
+  get username() {
+    return this.loginForm.get('username');
+  }
+  get password() {
+    return this.loginForm.get('password');
+  }
 
   submitForm() {
-    if (this.loginForm.invalid) {
-      return;
-    }
+    if (this.loginForm.invalid) return;
 
-    this.http.post<{ token: string, role: string, id: number }>('http://localhost:8080/api/auth/authenticate', this.loginForm.value)
+    this.http
+      .post<{ token: string; role: string; id: number }>(
+        'http://localhost:8080/api/auth/authenticate',
+        this.loginForm.value
+      )
       .subscribe({
         next: (response) => {
           this.authService.setToken(response.token);
           this.authService.setRole(response.role as 'USER' | 'ADMIN');
-          this.authService.setUserId(response.id);  
-          
+          this.authService.setUserId(response.id);
+
           if (response.role === 'ADMIN') {
             this.router.navigate(['/admin/movies']);
           } else {
-            this.router.navigate(['/user/profile']);  
+            this.router.navigate(['/user/profile']);
           }
         },
-        error: err => {
-          this.errorMessage = err.error.message || 'Ошибка входа. Попробуйте снова.';
-        }
+        error: (err) => {
+          this.errorMessage =
+            err.error.message || 'Ошибка входа. Попробуйте снова.';
+        },
       });
+  }
+
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
   }
 }

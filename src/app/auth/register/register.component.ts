@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Добавляем для *ngIf
+import { CommonModule } from '@angular/common'; 
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
@@ -8,12 +8,13 @@ import { Router, RouterModule } from '@angular/router';
   selector: 'app-register',
   standalone: true, 
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  styleUrls: ['./register.component.scss'],
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule, RouterModule] 
 })
 export class RegisterComponent {
   registerForm: FormGroup;
   errorMessage: string | null = null;
+  passwordVisible: boolean = false; 
 
   constructor(
     private fb: FormBuilder,
@@ -46,8 +47,12 @@ export class RegisterComponent {
           this.router.navigate(['/login']);
         },
         error: err => {
-          this.errorMessage = err.error.message || 'Registration failed. Please try again.';
+          this.errorMessage = err.error.message || 'Ошибка регистрации. Попробуйте снова.';
         }
       });
+  }
+
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
   }
 }

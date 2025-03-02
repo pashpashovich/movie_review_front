@@ -1,37 +1,52 @@
 <div class="container my-5">
-  <h1 class="text-center mb-4">Управление отзывами</h1>
+  <h1 class="text-center mb-4">📝 Управление отзывами</h1>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Автор</th>
-        <th>Фильм</th>
-        <th>Отзыв</th>
-        <th>Статус</th>
-        <th>Действия</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngIf="reviews.length === 0">
-        <td colspan="5" class="text-center text-muted">Нет данных</td>
-      </tr>
-      <tr *ngFor="let review of reviews">
-        <td>{{ review.username }}</td> 
-        <td>{{ review.movieName }}</td> 
-        <td>{{ review.content }}</td>
-        <td>
-          <select class="form-select" [(ngModel)]="review.status">
-            <option *ngFor="let option of statusOptions" [value]="option.value">
-              {{ option.label }}
-            </option>
-          </select>
-        </td>
-        <td>
-          <button class="btn btn-primary mt-2" (click)="updateReviewStatus(review.id, review.status)">
-            Обновить
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive shadow rounded">
+    <table class="table table-hover align-middle">
+      <thead class="table-dark text-center">
+        <tr>
+          <th>#</th>
+          <th>👤 Пользователь</th>
+          <th>🎬 Фильм</th>
+          <th>💬 Отзыв</th>
+          <th>⚡ Статус</th>
+          <th>⚙️ Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="reviews.length === 0">
+          <td colspan="6" class="text-center text-muted py-4">🕵️‍♂️ Нет отзывов</td>
+        </tr>
+        <tr *ngFor="let review of reviews" class="text-center">
+          <td class="fw-bold">{{ review.id }}</td>
+          <td>{{ review.username }}</td>
+          <td>{{ review.movieName }}</td>
+          <td class="text-start" style="max-width: 250px; word-wrap: break-word;">
+            {{ review.content }}
+          </td>
+          <td>
+            <span class="badge"
+                  [class.bg-success]="review.status === 'APPROVED'"
+                  [class.bg-danger]="review.status === 'REJECTED'"
+                  [class.bg-warning]="review.status === 'PENDING'">
+              {{ review.status === 'APPROVED' ? '✅ Одобрено' : 
+                 review.status === 'REJECTED' ? '🚫 Отклонено' : '⏳ В ожидании' }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-success" 
+                    (click)="updateReviewStatus(review.id, 'APPROVED')" 
+                    [disabled]="review.status === 'APPROVED'">
+              ✅ Одобрить
+            </button>
+            <button class="btn btn-sm btn-outline-danger ms-1" 
+                    (click)="updateReviewStatus(review.id, 'REJECTED')" 
+                    [disabled]="review.status === 'REJECTED'">
+              🚫 Отклонить
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -6,8 +6,8 @@ import { FormsModule } from '@angular/forms';
 
 interface Review {
   id: number;
-  username: string; 
-  movieName: string; 
+  username: string;
+  movieName: string;
   content: string;
   status: 'APPROVED' | 'REJECTED' | 'PENDING';
 }
@@ -37,13 +37,13 @@ export class ReviewManagementComponent implements OnInit {
       next: (data) => {
         this.reviews = data.map((review) => ({
           id: review.id,
-          username: review.username || 'Неизвестный пользователь', 
-          movieName: review.movieName || 'Неизвестный фильм', 
+          username: review.username || 'Неизвестный пользователь',
+          movieName: review.movieName || 'Неизвестный фильм',
           content: review.content,
-          status: review.status || 'PENDING', 
+          status: review.status || 'PENDING',
         }));
       },
-      error: (err) => console.error('Ошибка загрузки отзывов:', err),
+      error: (err) => console.error('❌ Ошибка загрузки отзывов:', err),
     });
   }
 
@@ -52,12 +52,10 @@ export class ReviewManagementComponent implements OnInit {
       .patch(`http://localhost:8080/api/admin/reviews/${reviewId}?status=${status}`, {})
       .subscribe({
         next: () => {
-          console.log(`Статус отзыва ID ${reviewId} обновлен на ${status}`);
-          this.reviews = this.reviews.map((review) =>
-            review.id === reviewId ? { ...review, status } : review
-          );
+          console.log(`✅ Статус отзыва ID ${reviewId} обновлен на ${status}`);
+          this.loadReviews(); 
         },
-        error: (err) => console.error('Ошибка обновления статуса отзыва:', err),
+        error: (err) => console.error('❌ Ошибка обновления статуса отзыва:', err),
       });
   }
 }

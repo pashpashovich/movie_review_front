@@ -1,32 +1,65 @@
 <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card shadow">
-          <div class="card-header text-center bg-primary text-white">
-            <h3>Авторизация</h3>
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card shadow-lg rounded login-card">
+        <div class="card-header text-center bg-gradient-primary text-white">
+          <h3>🔐 Вход в систему</h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="errorMessage" class="alert alert-danger text-center fade-in">
+            {{ errorMessage }}
           </div>
-          <div class="card-body">
-            <div *ngIf="errorMessage" class="alert alert-danger text-center">{{ errorMessage }}</div>
-            
-            <form [formGroup]="loginForm" (ngSubmit)="submitForm()">
-              <div class="mb-3">
-                <label for="username" class="form-label">Имя пользователя</label>
-                <input type="text" id="username" formControlName="username" class="form-control" required>
+
+          <form [formGroup]="loginForm" (ngSubmit)="submitForm()">
+            <div class="mb-3">
+              <label for="username" class="form-label">👤 Имя пользователя</label>
+              <input 
+                type="text" 
+                id="username" 
+                formControlName="username" 
+                class="form-control" 
+                required
+                placeholder="Введите имя пользователя"
+              />
+            </div>
+
+            <div class="mb-3 position-relative">
+              <label for="password" class="form-label">🔑 Пароль</label>
+              <div class="input-group">
+                <input 
+                  [type]="passwordVisible ? 'text' : 'password'"
+                  id="password" 
+                  formControlName="password" 
+                  class="form-control" 
+                  required
+                  placeholder="Введите пароль"
+                />
+                <button 
+                  type="button" 
+                  class="btn btn-outline-secondary eye-icon" 
+                  (click)="togglePasswordVisibility()"
+                >
+                  <i class="bi" [ngClass]="passwordVisible ? 'bi-eye-slash' : 'bi-eye'"></i>
+                </button>
               </div>
-  
-              <div class="mb-3">
-                <label for="password" class="form-label">Пароль</label>
-                <input type="password" id="password" formControlName="password" class="form-control" required>
-              </div>
-  
-              <button type="submit" class="btn btn-primary w-100" [disabled]="loginForm.invalid">Войти</button>
-            </form>
-          </div>
-  
-          <div class="card-footer text-center">
-            <a routerLink="/register" class="text-muted">Нет аккаунта? Зарегистрируйтесь</a>
-          </div>
+            </div>
+
+            <button 
+              type="submit" 
+              class="btn btn-primary w-100 shadow-sm" 
+              [disabled]="loginForm.invalid"
+            >
+              🚀 Войти
+            </button>
+          </form>
+        </div>
+
+        <div class="card-footer text-center">
+          <a routerLink="/register" class="text-muted hover-underline">
+            ✨ Нет аккаунта? Зарегистрируйтесь
+          </a>
         </div>
       </div>
     </div>
   </div>
+</div>
