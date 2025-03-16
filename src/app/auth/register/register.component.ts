@@ -42,7 +42,7 @@ export class RegisterComponent {
         ],
       },
       { updateOn: 'change' }
-    ); // 🔥 Теперь валидация работает на каждом изменении!
+    ); 
   }
 
   get username() {
